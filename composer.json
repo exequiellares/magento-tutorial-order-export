@@ -1,0 +1,18 @@
+{
+    "name": "exequiellares/magento-tutorial-order-export",
+    "description": "Modulo tutorial de Magento para exportar ordenes a un ERP",
+    "type": "magento2-module",
+    "require": {
+        "php": "~7.4.0||~8.1.0",
+        "magento/framework": "^103"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "ExequielLares\\OrderExport\\": ""
+        }
+    }
+}
+
