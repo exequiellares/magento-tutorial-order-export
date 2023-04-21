@@ -7,12 +7,34 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use ExequielLares\OrderExport\Model\HeaderData;
+use ExequielLares\OrderExport\Model\HeaderDataFactory;
 
+/**
+ *
+ */
 class OrderExport extends Command
 {
     const ARG_NAME_ORDER_ID = 'order-id';
     const OPT_NAME_SHIP_DATE = 'ship-date';
     const OPT_NAME_MERCHANT_NOTES = 'notes';
+    /**
+     * @var HeaderDataFactory
+     */
+    private HeaderDataFactory $headerDataFactory;
+
+    /**
+     * @param HeaderDataFactory $headerDataFactory
+     * @param string|null $name
+     */
+    public function __construct(
+        HeaderDataFactory $headerDataFactory,
+        string $name = null
+    )
+    {
+        parent::__construct($name);
+        $this->headerDataFactory = $headerDataFactory;
+    }
 
     /**
      * @inheritdoc
@@ -44,6 +66,7 @@ class OrderExport extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -51,10 +74,16 @@ class OrderExport extends Command
         $notes = $input->getOption(self::OPT_NAME_MERCHANT_NOTES);
         $shipDate = $input->getOption(self::OPT_NAME_SHIP_DATE);
 
+        /** @var HeaderData $headerData */
+        $headerData = $this->headerDataFactory->create();
+        if ($shipDate) {
+            $headerData->setShipDate(new \DateTime($shipDate));
+        }
+        if ($notes) {
+            $headerData->setMerchantNotes($notes);
+        }
 
-        $output->writeln(__('Order Id is %1', $orderId));
-        $output->writeln(__('Notes is %1', $notes));
-        $output->writeln(__('Ship Date is %1', $shipDate));
+        $output->writeln(print_r($headerData, true));
 
         return 0;
     }
