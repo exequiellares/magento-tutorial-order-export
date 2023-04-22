@@ -9,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use ExequielLares\OrderExport\Model\HeaderData;
 use ExequielLares\OrderExport\Model\HeaderDataFactory;
+use ExequielLares\OrderExport\Action\CollectOrderData;
 
 /**
  *
@@ -22,18 +23,25 @@ class OrderExport extends Command
      * @var HeaderDataFactory
      */
     private HeaderDataFactory $headerDataFactory;
+    /**
+     * @var CollectOrderData
+     */
+    private CollectOrderData $collectOrderData;
 
     /**
      * @param HeaderDataFactory $headerDataFactory
+     * @param CollectOrderData $collectOrderData
      * @param string|null $name
      */
     public function __construct(
         HeaderDataFactory $headerDataFactory,
+        CollectOrderData $collectOrderData,
         string $name = null
     )
     {
         parent::__construct($name);
         $this->headerDataFactory = $headerDataFactory;
+        $this->collectOrderData = $collectOrderData;
     }
 
     /**
@@ -83,7 +91,9 @@ class OrderExport extends Command
             $headerData->setMerchantNotes($notes);
         }
 
-        $output->writeln(print_r($headerData, true));
+        $orderData = $this->collectOrderData->execute($orderId, $headerData);
+
+        $output->writeln(print_r($orderData, true));
 
         return 0;
     }
