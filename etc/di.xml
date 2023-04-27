@@ -11,6 +11,15 @@
         <arguments>
             <argument name="collectors" xsi:type="array">
                 <item name="order_header_data" xsi:type="object">ExequielLares\OrderExport\Action\OrderDataCollector\OrderHeaderData</item>
+                <item name="order_item_data" xsi:type="object">ExequielLares\OrderExport\Action\OrderDataCollector\OrderItemData</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="ExequielLares\OrderExport\Action\GetOrderExportItems">
+        <arguments>
+            <argument name="allowedTypes" xsi:type="array">
+                <item name="simple" xsi:type="const">Magento\Catalog\Model\Product\Type::TYPE_SIMPLE</item>
+                <item name="virtual" xsi:type="const">Magento\Catalog\Model\Product\Type::TYPE_VIRTUAL</item>
             </argument>
         </arguments>
     </type>
