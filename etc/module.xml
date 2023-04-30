@@ -3,6 +3,7 @@
     <module name="ExequielLares_OrderExport">
         <sequence>
             <module name="Magento_Sales" />
+            <module name="Magento_Eav"/>
         </sequence>
     </module>
 </config>

@@ -5,7 +5,8 @@
     "require": {
         "php": "~7.4.0||~8.1.0",
         "magento/framework": "^103",
-        "magento/module-sales": "^103"
+        "magento/module-sales": "^103",
+        "magento/module-eav": "^102"
     },
     "autoload": {
         "files": [
