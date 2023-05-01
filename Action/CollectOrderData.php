@@ -2,6 +2,7 @@
 
 namespace ExequielLares\OrderExport\Action;
 
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use ExequielLares\OrderExport\Model\HeaderData;
 use ExequielLares\OrderExport\Api\OrderDataCollectorInterface;
@@ -36,16 +37,13 @@ class CollectOrderData
     }
 
     /**
-     * @param int $orderId
-     * @param \ExequielLares\OrderExport\Model\HeaderData $headerData
+     * @param OrderInterface $order
+     * @param HeaderData $headerData
      * @return array
      */
-    public function execute(int $orderId, HeaderData $headerData)
+    public function execute(OrderInterface $order, HeaderData $headerData): array
     {
-        /** @var \Magento\Sales\Api\Data\OrderInterface $order */
-        $order = $this->orderRepository->get($orderId);
         $output = [];
-
         foreach($this->collectors as $collector) {
             $output = array_merge_recursive($output, $collector->collect($order, $headerData));
         }

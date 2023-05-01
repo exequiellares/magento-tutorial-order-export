@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use ExequielLares\OrderExport\Model\HeaderData;
 use ExequielLares\OrderExport\Model\HeaderDataFactory;
-use ExequielLares\OrderExport\Action\CollectOrderData;
+use ExequielLares\OrderExport\Action\ExportOrder;
 
 /**
  *
@@ -19,29 +19,31 @@ class OrderExport extends Command
     const ARG_NAME_ORDER_ID = 'order-id';
     const OPT_NAME_SHIP_DATE = 'ship-date';
     const OPT_NAME_MERCHANT_NOTES = 'notes';
+
     /**
      * @var HeaderDataFactory
      */
     private HeaderDataFactory $headerDataFactory;
+
     /**
-     * @var CollectOrderData
+     * @var ExportOrder
      */
-    private CollectOrderData $collectOrderData;
+    private ExportOrder $exportOrder;
 
     /**
      * @param HeaderDataFactory $headerDataFactory
-     * @param CollectOrderData $collectOrderData
+     * @param ExportOrder $exportOrder
      * @param string|null $name
      */
     public function __construct(
         HeaderDataFactory $headerDataFactory,
-        CollectOrderData $collectOrderData,
+        ExportOrder $exportOrder,
         string $name = null
     )
     {
         parent::__construct($name);
         $this->headerDataFactory = $headerDataFactory;
-        $this->collectOrderData = $collectOrderData;
+        $this->exportOrder = $exportOrder;
     }
 
     /**
@@ -91,9 +93,19 @@ class OrderExport extends Command
             $headerData->setMerchantNotes($notes);
         }
 
-        $orderData = $this->collectOrderData->execute($orderId, $headerData);
+        $result = $this->exportOrder->execute($orderId, $headerData);
+        $success = $result['success'] ?? false;
+        if ($success) {
+            $output->writeln(__('Successfully exported order'));
+        } else {
+            $msg = $result['error'] ?? null;
+            if ($msg === null) {
+                $msg = __('Unexpected errors occurred');
+            }
+            $output->writeln($msg);
+            return 1;
+        }
 
-        $output->writeln(print_r($orderData, true));
 
         return 0;
     }
