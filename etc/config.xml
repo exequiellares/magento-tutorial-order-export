@@ -4,6 +4,8 @@
         <sales>
             <order_export>
                 <enabled>0</enabled>
+                <api_url>https://mock-api.test/test-post</api_url>
+                <api_token backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
             </order_export>
         </sales>
     </default>
