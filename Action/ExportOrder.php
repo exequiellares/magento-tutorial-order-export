@@ -28,19 +28,27 @@ class ExportOrder
     private Config $config;
 
     /**
+     * @var SendOrderDataToWebservice
+     */
+    private SendOrderDataToWebservice $sendOrderDataToWebservice;
+
+    /**
      * @param OrderRepositoryInterface $orderRepository
      * @param CollectOrderData $collectOrderData
      * @param Config $config
+     * @param SendOrderDataToWebservice $sendOrderDataToWebservice
      */
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         CollectOrderData $collectOrderData,
-        Config $config
+        Config $config,
+        SendOrderDataToWebservice $sendOrderDataToWebservice
     ) {
 
         $this->orderRepository = $orderRepository;
         $this->collectOrderData = $collectOrderData;
         $this->config = $config;
+        $this->sendOrderDataToWebservice = $sendOrderDataToWebservice;
     }
 
     /**
@@ -61,7 +69,9 @@ class ExportOrder
         $results = ['success' => false, 'error' => null];
 
         $exportData = $this->collectOrderData->execute($order, $headerData);
-        // TODO: exportar al web service y guardar export details en la DB
+        $results['success'] = $this->sendOrderDataToWebservice->execute($exportData, $order);
+
+        // TODO: Guardar lo detalles del export en la orden
 
         return $results;
     }
