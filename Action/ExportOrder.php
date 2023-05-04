@@ -69,9 +69,11 @@ class ExportOrder
         $results = ['success' => false, 'error' => null];
 
         $exportData = $this->collectOrderData->execute($order, $headerData);
-        $results['success'] = $this->sendOrderDataToWebservice->execute($exportData, $order);
-
-        // TODO: Guardar lo detalles del export en la orden
+        try {
+            $results['success'] = $this->sendOrderDataToWebservice->execute($exportData, $order);
+        } catch (\Throwable $e) {
+            $results['error'] = $e->getMessage();
+        }
 
         return $results;
     }

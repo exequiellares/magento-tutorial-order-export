@@ -102,10 +102,9 @@ class OrderExport extends Command
             if ($msg === null) {
                 $msg = __('Unexpected errors occurred');
             }
-            $output->writeln($msg);
+            $output->writeln('<error>' . $msg . '</error>');
             return 1;
         }
-
 
         return 0;
     }
