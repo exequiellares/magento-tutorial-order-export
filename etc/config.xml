@@ -6,6 +6,7 @@
                 <enabled>0</enabled>
                 <api_url>https://mock-api.test/test-post</api_url>
                 <api_token backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <ssl_verify_enabled>1</ssl_verify_enabled>
             </order_export>
         </sales>
     </default>

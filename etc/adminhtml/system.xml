@@ -21,6 +21,14 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
+                <field id="ssl_verify_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable SSL Verification</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>This enable the request SSL verification to allow self-signed certificates</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
             </group>
         </section>
     </system>
