@@ -7,7 +7,7 @@
         "magento/framework": "^103",
         "magento/module-sales": "^103",
         "magento/module-eav": "^102",
-        "guzzlehttp/guzzle": "7.5"
+        "guzzlehttp/guzzle": "^7.5"
     },
     "autoload": {
         "files": [

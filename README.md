@@ -9,6 +9,9 @@ Exporta ordenes a un sistema ERP externo
 En Stores > Configuration > Sales > Sales > Order Export:
 
 * **Enabled**
+* **API URL**: URL del sistema ERP
+* **API Token**: Token de autenticacion del sistema ERP
+* **Enable SSL Verification**: Habilita la verificacion de certificados SSL (Deshabilitar en desarrollo)
 
 ## Comando CLI
 
