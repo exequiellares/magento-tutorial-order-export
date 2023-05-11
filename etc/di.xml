@@ -35,4 +35,6 @@
             </argument>
         </arguments>
     </type>
+    <preference for="ExequielLares\OrderExport\Api\Data\OrderExportDetailsInterface" type="ExequielLares\OrderExport\Model\OrderExportDetails"/>
+    <preference for="ExequielLares\OrderExport\Api\OrderExportDetailsRepositoryInterface" type="ExequielLares\OrderExport\Model\OrderExportDetailsRepository"/>
 </config>

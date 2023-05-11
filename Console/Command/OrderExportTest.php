@@ -29,9 +29,7 @@ class OrderExportTest extends Command
      * @var ExportOrder
      */
     private ExportOrder $exportOrder;
-    private \ExequielLares\OrderExport\Model\OrderExportDetailsFactory $orderExportDetailsFactory;
-    private \ExequielLares\OrderExport\Model\ResourceModel\OrderExportDetails $orderExportDetailsResource;
-    private \ExequielLares\OrderExport\Model\ResourceModel\OrderExportDetails\CollectionFactory $orderExportDetailsCollectionFactory;
+    private \ExequielLares\OrderExport\Api\OrderExportDetailsRepositoryInterface $orderExportDetailsRepository;
 
     /**
      * @param HeaderDataFactory $headerDataFactory
@@ -41,18 +39,14 @@ class OrderExportTest extends Command
     public function __construct(
         HeaderDataFactory $headerDataFactory,
         ExportOrder $exportOrder,
-        \ExequielLares\OrderExport\Model\OrderExportDetailsFactory $orderExportDetailsFactory,
-        \ExequielLares\OrderExport\Model\ResourceModel\OrderExportDetails $orderExportDetailsResource,
-        \ExequielLares\OrderExport\Model\ResourceModel\OrderExportDetails\CollectionFactory $orderExportDetailsCollectionFactory,
+        \ExequielLares\OrderExport\Api\OrderExportDetailsRepositoryInterface $orderExportDetailsRepository,
         string $name = null
     )
     {
         parent::__construct($name);
         $this->headerDataFactory = $headerDataFactory;
         $this->exportOrder = $exportOrder;
-        $this->orderExportDetailsFactory = $orderExportDetailsFactory;
-        $this->orderExportDetailsResource = $orderExportDetailsResource;
-        $this->orderExportDetailsCollectionFactory = $orderExportDetailsCollectionFactory;
+        $this->orderExportDetailsRepository = $orderExportDetailsRepository;
     }
 
     /**
@@ -93,33 +87,15 @@ class OrderExportTest extends Command
         $notes = $input->getOption(self::OPT_NAME_MERCHANT_NOTES);
         $shipDate = $input->getOption(self::OPT_NAME_SHIP_DATE);
 
-//        $model = $this->orderExportDetailsFactory->create();
-//
-//        $model->setOrderId($orderId)
-//            ->setMerchantNotes($notes)
-//            ->setShipOn(new \DateTime())
-//            ->setExportedAt(new \DateTime());
-//
-//        $output->writeln(print_r($model->getData(), true));
-//
-//        $this->orderExportDetailsResource->save($model);
-//        $this->orderExportDetailsResource->delete($model);
-//
-//        $modelToUpdate = $this->orderExportDetailsFactory->create();
-//        $this->orderExportDetailsResource->load($modelToUpdate, 1);
-//
-//        $modelToUpdate->setMerchantNotes('Esto es un modelo editado');
-//        $output->writeln(print_r($modelToUpdate->getData(), true));
-//        $this->orderExportDetailsResource->save($modelToUpdate);
+        $headerData = $this->headerDataFactory->create();
 
-        $collection = $this->orderExportDetailsCollectionFactory->create()
-            ->addFieldToSelect(['order_id', 'merchant_notes'])
-            ->addFieldToFilter('merchant_notes', ['like' => '%nota%']);
+        $obj = $this->orderExportDetailsRepository->getById($orderId);
 
+        $obj->setMerchantNotes($notes);
 
-        foreach ($collection as $item) {
-            $output->writeln(print_r($item->getData(), true));
-        }
+        $this->orderExportDetailsRepository->save($obj);
+
+        $this->orderExportDetailsRepository->deleteById(7);
 
         return 0;
     }
