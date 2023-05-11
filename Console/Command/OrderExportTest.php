@@ -30,6 +30,7 @@ class OrderExportTest extends Command
      */
     private ExportOrder $exportOrder;
     private \ExequielLares\OrderExport\Api\OrderExportDetailsRepositoryInterface $orderExportDetailsRepository;
+    private \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder;
 
     /**
      * @param HeaderDataFactory $headerDataFactory
@@ -40,6 +41,7 @@ class OrderExportTest extends Command
         HeaderDataFactory $headerDataFactory,
         ExportOrder $exportOrder,
         \ExequielLares\OrderExport\Api\OrderExportDetailsRepositoryInterface $orderExportDetailsRepository,
+        \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         string $name = null
     )
     {
@@ -47,6 +49,7 @@ class OrderExportTest extends Command
         $this->headerDataFactory = $headerDataFactory;
         $this->exportOrder = $exportOrder;
         $this->orderExportDetailsRepository = $orderExportDetailsRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -89,13 +92,13 @@ class OrderExportTest extends Command
 
         $headerData = $this->headerDataFactory->create();
 
-        $obj = $this->orderExportDetailsRepository->getById($orderId);
+        $this->searchCriteriaBuilder->addFilter('order_id', 1);
+        $searchResults = $this->orderExportDetailsRepository->getList($this->searchCriteriaBuilder->create());
 
-        $obj->setMerchantNotes($notes);
+        foreach ($searchResults->getItems() as $item) {
+            $output->writeln(print_r($item->getData(), true));
+        }
 
-        $this->orderExportDetailsRepository->save($obj);
-
-        $this->orderExportDetailsRepository->deleteById(7);
 
         return 0;
     }

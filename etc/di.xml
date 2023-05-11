@@ -37,4 +37,22 @@
     </type>
     <preference for="ExequielLares\OrderExport\Api\Data\OrderExportDetailsInterface" type="ExequielLares\OrderExport\Model\OrderExportDetails"/>
     <preference for="ExequielLares\OrderExport\Api\OrderExportDetailsRepositoryInterface" type="ExequielLares\OrderExport\Model\OrderExportDetailsRepository"/>
+    <preference for="ExequielLares\OrderExport\Api\Data\OrderExportDetailsSearchResultsInterface" type="ExequielLares\OrderExport\Model\OrderExportDetailsSearchResults"/>
+    <virtualType
+        name="ExequielLares\OrderExport\Virtual\Model\Api\SearchCriteria\DetailsCollectionProcessor"
+        type="\Magento\Framework\Api\SearchCriteria\CollectionProcessor"
+    >
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor</item>
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="ExequielLares\OrderExport\Model\OrderExportDetailsRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">ExequielLares\OrderExport\Virtual\Model\Api\SearchCriteria\DetailsCollectionProcessor</argument>
+        </arguments>
+    </type>
 </config>

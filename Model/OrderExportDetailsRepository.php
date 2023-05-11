@@ -4,13 +4,19 @@ namespace ExequielLares\OrderExport\Model;
 
 use ExequielLares\OrderExport\Api\Data\OrderExportDetailsInterface;
 use ExequielLares\OrderExport\Api\Data\OrderExportDetailsInterfaceFactory;
+use ExequielLares\OrderExport\Api\Data\OrderExportDetailsSearchResultsInterface;
 use ExequielLares\OrderExport\Model\ResourceModel\OrderExportDetails as OrderExportDetailsResourceModel;
+use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Model\AbstractModel;
 use ExequielLares\OrderExport\Api\OrderExportDetailsRepositoryInterface;
+use ExequielLares\OrderExport\Api\Data\OrderExportDetailsSearchResultsInterfaceFactory;
+use ExequielLares\OrderExport\Model\ResourceModel\OrderExportDetails\Collection as OrderExportDetailsCollection;
+use ExequielLares\OrderExport\Model\ResourceModel\OrderExportDetails\CollectionFactory as OrderExportDetailsCollectionFactory;
+use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 
 /**
  * Class OrderExportDetailsRepository
@@ -26,6 +32,9 @@ class OrderExportDetailsRepository implements OrderExportDetailsRepositoryInterf
      * @var OrderExportDetailsResourceModel
      */
     private OrderExportDetailsResourceModel $orderExportDetailsResourceModel;
+    private OrderExportDetailsSearchResultsInterfaceFactory $searchResultsFactory;
+    private OrderExportDetailsCollectionFactory $orderExportDetailsCollectionFactory;
+    private CollectionProcessorInterface $collectionProcessor;
 
     /**
      * @param OrderExportDetailsInterfaceFactory $orderExportDetailsFactory
@@ -33,18 +42,22 @@ class OrderExportDetailsRepository implements OrderExportDetailsRepositoryInterf
      */
     public function __construct(
         OrderExportDetailsInterfaceFactory $orderExportDetailsFactory,
-        OrderExportDetailsResourceModel $orderExportDetailsResourceModel
+        OrderExportDetailsResourceModel $orderExportDetailsResourceModel,
+        OrderExportDetailsSearchResultsInterfaceFactory $searchResultsFactory,
+        OrderExportDetailsCollectionFactory $orderExportDetailsCollectionFactory,
+        CollectionProcessorInterface $collectionProcessor
     )
     {
 
         $this->orderExportDetailsFactory = $orderExportDetailsFactory;
         $this->orderExportDetailsResourceModel = $orderExportDetailsResourceModel;
+        $this->searchResultsFactory = $searchResultsFactory;
+        $this->orderExportDetailsCollectionFactory = $orderExportDetailsCollectionFactory;
+        $this->collectionProcessor = $collectionProcessor;
     }
 
     /**
-     * @param OrderExportDetailsInterface $orderExportDetails
-     * @return OrderExportDetailsInterface
-     * @throws CouldNotSaveException
+     * {@inheritdoc}
      */
     public function save(OrderExportDetailsInterface $orderExportDetails): OrderExportDetailsInterface
     {
@@ -61,9 +74,7 @@ class OrderExportDetailsRepository implements OrderExportDetailsRepositoryInterf
     }
 
     /**
-     * @param int $orderExportDetailsId
-     * @return OrderExportDetailsInterface
-     * @throws NoSuchEntityException
+     * {@inheritdoc}
      */
     public function getById(int $orderExportDetailsId): OrderExportDetailsInterface
     {
@@ -76,9 +87,7 @@ class OrderExportDetailsRepository implements OrderExportDetailsRepositoryInterf
     }
 
     /**
-     * @param OrderExportDetailsInterface $orderExportDetails
-     * @return bool
-     * @throws CouldNotDeleteException
+     * {@inheritdoc}
      */
     public function delete(OrderExportDetailsInterface $orderExportDetails): bool
     {
@@ -95,13 +104,28 @@ class OrderExportDetailsRepository implements OrderExportDetailsRepositoryInterf
     }
 
     /**
-     * @param int $orderExportDetailsId
-     * @return bool
-     * @throws CouldNotDeleteException
-     * @throws NoSuchEntityException
+     * {@inheritdoc}
      */
     public function deleteById(int $orderExportDetailsId): bool
     {
         return $this->delete($this->getById($orderExportDetailsId));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getList(SearchCriteriaInterface $searchCriteria): OrderExportDetailsSearchResultsInterface
+    {
+        /** @var OrderExportDetailsCollection $collection */
+        $collection = $this->orderExportDetailsCollectionFactory->create();
+
+        $this->collectionProcessor->process($searchCriteria, $collection);
+
+        /** @var OrderExportDetailsSearchResultsInterface $result */
+        $result = $this->searchResultsFactory->create();
+        $result->setSearchCriteria($searchCriteria);
+        $result->setItems($collection->getItems());
+        $result->setTotalCount($collection->getSize());
+        return $result;
     }
 }

@@ -3,41 +3,44 @@
 namespace ExequielLares\OrderExport\Api;
 
 use ExequielLares\OrderExport\Api\Data\OrderExportDetailsInterface;
-use Magento\Framework\Exception\CouldNotDeleteException;
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Api\SearchCriteriaInterface;
+use ExequielLares\OrderExport\Api\Data\OrderExportDetailsSearchResultsInterface;
 
 interface OrderExportDetailsRepositoryInterface
 {
 
     /**
-     * @param OrderExportDetailsInterface $orderExportDetails
-     * @return OrderExportDetailsInterface
-     * @throws CouldNotSaveException
+     * @param \ExequielLares\OrderExport\Api\Data\OrderExportDetailsInterface $orderExportDetails
+     * @return \ExequielLares\OrderExport\Api\Data\OrderExportDetailsInterface
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
      */
     public function save(OrderExportDetailsInterface $orderExportDetails): OrderExportDetailsInterface;
 
     /**
      * @param int $orderExportDetailsId
-     * @return OrderExportDetailsInterface
-     * @throws NoSuchEntityException
+     * @return \ExequielLares\OrderExport\Api\Data\OrderExportDetailsInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getById(int $orderExportDetailsId): OrderExportDetailsInterface;
 
     /**
-     * @param OrderExportDetailsInterface $orderExportDetails
+     * @param \ExequielLares\OrderExport\Api\Data\OrderExportDetailsInterface $orderExportDetails
      * @return bool
-     * @throws CouldNotDeleteException
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
     public function delete(OrderExportDetailsInterface $orderExportDetails): bool;
 
     /**
      * @param int $orderExportDetailsId
      * @return bool
-     * @throws CouldNotDeleteException
-     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\CouldNotDeleteException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function deleteById(int $orderExportDetailsId): bool;
 
-//    public function getList();
+    /**
+     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+     * @return \ExequielLares\OrderExport\Api\Data\OrderExportDetailsSearchResultsInterface
+     */
+    public function getList(SearchCriteriaInterface $searchCriteria): OrderExportDetailsSearchResultsInterface;
 }
