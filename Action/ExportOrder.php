@@ -31,6 +31,7 @@ class ExportOrder
      * @var SendOrderDataToWebservice
      */
     private SendOrderDataToWebservice $sendOrderDataToWebservice;
+    private SaveExportDetailsToOrder $saveExportDetailsToOrder;
 
     /**
      * @param OrderRepositoryInterface $orderRepository
@@ -42,13 +43,15 @@ class ExportOrder
         OrderRepositoryInterface $orderRepository,
         CollectOrderData $collectOrderData,
         Config $config,
-        SendOrderDataToWebservice $sendOrderDataToWebservice
+        SendOrderDataToWebservice $sendOrderDataToWebservice,
+        SaveExportDetailsToOrder $saveExportDetailsToOrder
     ) {
 
         $this->orderRepository = $orderRepository;
         $this->collectOrderData = $collectOrderData;
         $this->config = $config;
         $this->sendOrderDataToWebservice = $sendOrderDataToWebservice;
+        $this->saveExportDetailsToOrder = $saveExportDetailsToOrder;
     }
 
     /**
@@ -71,6 +74,7 @@ class ExportOrder
         $exportData = $this->collectOrderData->execute($order, $headerData);
         try {
             $results['success'] = $this->sendOrderDataToWebservice->execute($exportData, $order);
+            $this->saveExportDetailsToOrder->execute($order, $headerData, $results);
         } catch (\Throwable $e) {
             $results['error'] = $e->getMessage();
         }
