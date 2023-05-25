@@ -1,5 +1,8 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
+
+/** @var \ExequielLares\OrderExport\ViewModel\OrderExportLink $viewModel */
+$viewModel = $block->getData('view_model');
 ?>
-<a href="#"><?= __('Export Details') ?></a>
+<a href="<?= $viewModel->getOrderExportUrl() ?>"><?= __('Export Details') ?></a>
 
