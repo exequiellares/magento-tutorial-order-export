@@ -1,0 +1,27 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block  */
+
+$exportDetails = true;
+?>
+
+<p class="back-link">
+    <a href="#"><?= __('Back to Order') ?></a>
+</p>
+
+<?php if (!$exportDetails): ?>
+<p class="no-results">
+    <?= __('No details found') ?>
+</p>
+<?php else: ?>
+<dl class="order-export-details">
+    <dt><?= __('Shipping On') ?></dt>
+    <dd><?= "2023/06/06" ?></dd>
+
+    <dt><?= __('Merchant Notes') ?></dt>
+    <dd><?= "Esto es una nota" ?></dd>
+
+    <dt><?= __('Has Been Exported') ?></dt>
+    <dd><?= "Yes" ?></dd>
+</dl>
+<?php endif; ?>
+
