@@ -1,27 +1,35 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block  */
 
-$exportDetails = true;
+/** @var \ExequielLares\OrderExport\ViewModel\OrderExportView $viewModel */
+$viewModel = $block->getData('view_model');
+
+$exportDetails = $viewModel->getExportDetails();
+$shipOn = ($exportDetails !== null) ? $exportDetails->getShipOn() : null;
+
+$backUrl = $viewModel->getOrderViewUrl();
 ?>
 
+<?php if ($backUrl): ?>
 <p class="back-link">
-    <a href="#"><?= __('Back to Order') ?></a>
+    <a href="<?= $backUrl ?>"><?= __('Back to Order') ?></a>
 </p>
+<?php endif; ?>
 
-<?php if (!$exportDetails): ?>
+<?php if ($exportDetails === null || !$exportDetails->getId()): ?>
 <p class="no-results">
     <?= __('No details found') ?>
 </p>
 <?php else: ?>
 <dl class="order-export-details">
     <dt><?= __('Shipping On') ?></dt>
-    <dd><?= "2023/06/06" ?></dd>
+    <dd><?= ($shipOn)? $viewModel->formatDate($shipOn) : '' ?></dd>
 
     <dt><?= __('Merchant Notes') ?></dt>
-    <dd><?= "Esto es una nota" ?></dd>
+    <dd><?= $exportDetails->getMerchantNotes() ?></dd>
 
     <dt><?= __('Has Been Exported') ?></dt>
-    <dd><?= "Yes" ?></dd>
+    <dd><?= $exportDetails->hasBeenExported() ? __('Yes') : __('No') ?></dd>
 </dl>
 <?php endif; ?>
 
