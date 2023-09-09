@@ -1,8 +1,25 @@
 # Magento Tutorial Modulo Order Export
 
-NOTA: Este modulo es un ejemplo completo de customizacion de Magento con propositos educativos. Es un modulo de ejemplo y para seguir como guia de este tutorial.
+**NOTA**: Este modulo es un ejemplo completo de customizacion sobre Magento (Adobe Commerce) con propositos educativos.
 
-Exporta ordenes a un sistema ERP externo
+Se revisan varios conceptos claves a la  hora de customizar Magento:
+
+* Creacion de un modulo
+* Creacion de un comando CLI
+* Creacion de un modelo
+* Creacion de accion classes
+* Creacion de interfaces
+* Creacion de un plugin
+* Creacion de archivos de configuracion
+* Creacion de atributos EAV
+* Creacion de extension attributes
+* Creacion de bloques y modificacion de layout
+
+Puedes ver el tutorial completo en [Youtube](https://www.youtube.com/playlist?list=PLfgVXk3rdwYc4a0RyITthauAXp0KkyDao)
+
+## Requerimientos
+
+El listado de requerimientos del modulo se encuentra [aqui](doc/Requerimientos.pdf)
 
 ## Configuraciones
 
