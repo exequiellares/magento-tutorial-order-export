@@ -11,7 +11,6 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use ExequielLares\OrderExport\Api\OrderExportDetailsRepositoryInterface;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\View\Page\Config as PageConfig;
 
 /**
@@ -45,10 +44,6 @@ class OrderExportView implements ArgumentInterface
      */
     private OrderExportDetailsRepositoryInterface $orderExportDetailsRepository;
     /**
-     * @var SearchCriteriaBuilder
-     */
-    private SearchCriteriaBuilder $searchCriteriaBuilder;
-    /**
      * @var PageConfig
      */
     private PageConfig $pageConfig;
@@ -59,7 +54,6 @@ class OrderExportView implements ArgumentInterface
      * @param UrlInterface $urlBuilder
      * @param TimezoneInterface $timezone
      * @param OrderExportDetailsRepositoryInterface $orderExportDetailsRepository
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param PageConfig $pageConfig
      */
     public function __construct(
@@ -68,7 +62,6 @@ class OrderExportView implements ArgumentInterface
         UrlInterface $urlBuilder,
         TimezoneInterface $timezone,
         OrderExportDetailsRepositoryInterface $orderExportDetailsRepository,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
         PageConfig $pageConfig
     )
     {
@@ -78,7 +71,6 @@ class OrderExportView implements ArgumentInterface
         $this->urlBuilder = $urlBuilder;
         $this->timezone = $timezone;
         $this->orderExportDetailsRepository = $orderExportDetailsRepository;
-        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->pageConfig = $pageConfig;
         $order = $this->getOrder();
         if ($order) {
@@ -130,14 +122,9 @@ class OrderExportView implements ArgumentInterface
         if (!$order) {
             return null;
         }
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('order_id', $order->getEntityId())
-            ->create();
-        $results = $this->orderExportDetailsRepository->getList($searchCriteria);
-
-        if ($results->getTotalCount() > 0) {
-            $items = $results->getItems();
-            return reset($items);
+        $extAttrs = $order->getExtensionAttributes();
+        if ($extAttrs && $extAttrs->getExportDetails()) {
+            return $extAttrs->getExportDetails();
         }
         return null;
     }
