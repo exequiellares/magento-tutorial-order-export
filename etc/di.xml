@@ -4,6 +4,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="orderExportRun" xsi:type="object">ExequielLares\OrderExport\Console\Command\OrderExport</item>
+                <item name="orderExportTest" xsi:type="object">ExequielLares\OrderExport\Console\Command\OrderExportTest</item>
             </argument>
         </arguments>
     </type>
@@ -53,5 +54,8 @@
         <arguments>
             <argument name="collectionProcessor" xsi:type="object">ExequielLares\OrderExport\Virtual\Model\Api\SearchCriteria\DetailsCollectionProcessor</argument>
         </arguments>
+    </type>
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="load-export-details-into-order" type="ExequielLares\OrderExport\Plugin\LoadExportDetailsIntoOrder" sortOrder="10" />
     </type>
 </config>
