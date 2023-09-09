@@ -34,6 +34,20 @@ class LoadExportDetailsIntoOrder
      */
     public function afterGet(OrderRepositoryInterface $subject, OrderInterface $order, int $orderId): OrderInterface
     {
+        return $this->setExportDetails($order);
+    }
+
+    public function afterGetList(OrderRepositoryInterface $subject, \Magento\Sales\Api\Data\OrderSearchResultInterface $result, \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
+    {
+        $resultOrders = $result->getItems();
+        foreach ($resultOrders as $order) {
+            $this->setExportDetails($order);
+        }
+        return $result;
+    }
+
+    private function setExportDetails(OrderInterface $order)
+    {
         /** @var \Magento\Sales\Api\Data\OrderExtensionInterface $extAttr */
         $extAttr = $order->getExtensionAttributes();
         $exportDetails = $extAttr->getExportDetails();
@@ -42,7 +56,7 @@ class LoadExportDetailsIntoOrder
         }
 
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('order_id', $orderId)
+            ->addFilter('order_id', $order->getEntityId())
             ->create();
 
         $searchResults = $this->orderExportDetailsRepository->getList($searchCriteria);
